@@ -1,0 +1,101 @@
+//Programador: Marvin Araúz
+#include <Wire.h> // biblioteca de para la comunicacion en arduino
+#include <Servo.h> //biblioteca del servo motor
+#define Motor 6
+#define MD 8
+#define Est 3
+#define Speed 255
+#define Trig  13
+#define Echo  12
+#define Max_distance 200
+int Vuelta=0;
+int Tempo;
+Servo Servo_S;
+Servo Servo_Dire;
+
+void stopTime(int mS) {
+digitalWrite(Est, LOW);   // Entra en modo de espera
+delay(mS);                 // Espera el tiempo definido
+digitalWrite(Est, HIGH);  // Sale del modo de espera
+}
+
+
+
+void setup() {
+Serial.begin(9600);
+Servo_S.attach(10);
+Servo_Dire.attach(11);
+pinMode (Motor, OUTPUT);
+pinMode (MD, OUTPUT);
+pinMode (Est, OUTPUT);
+pinMode(Trig, OUTPUT);
+pinMode(Echo, INPUT);
+}
+
+void loop() {
+digitalWrite(Trig, LOW);
+delayMicroseconds (2);
+digitalWrite(Trig, HIGH);
+delayMicroseconds (10);
+digitalWrite(Trig, LOW);
+delayMicroseconds (2);
+Tempo = ((unsigned int)pulseIn(Echo, HIGH)/58);
+
+              
+if (Tempo <= 115 && Tempo > 0) {
+Servo_Dire.write(180);
+delay(1000);
+stopTime(1);
+digitalWrite(MD, HIGH); // Forward direction
+analogWrite(Motor, 255); // Full power
+delay(1350); //delay 2000mS
+analogWrite(Motor, 0);
+Vuelta = Vuelta+1;
+Servo_Dire.write(105);
+delay(1000);
+
+} else {
+Servo_Dire.write(105);
+delay(1000);
+stopTime(1);
+digitalWrite(MD, HIGH); // Forward direction
+analogWrite(Motor, 255); // Full power
+delay(300); //delay 2000mS
+analogWrite(Motor, 0);
+}
+
+if (Vuelta == 12) {
+Servo_Dire.write(105);
+delay(1000);
+stopTime(1);
+digitalWrite(MD, HIGH); // Forward direction
+analogWrite(Motor, 255); // Full power
+delay(1000); //delay 2000mS
+analogWrite(Motor, 0);
+
+while (Vuelta == 12) {
+  
+}
+}
+
+}
+
+
+
+//digitalWrite(MD, HIGH); // Forward direction
+//analogWrite(Motor, 255); // Full power
+//delay(2000); //delay 2000mS
+//stopTime(2000);
+//digitalWrite(MD, LOW); // Backward direction
+//analogWrite(Motor, 255); // Full power
+//delay(2000); //delay 2000mS
+//stopTime(2000);
+
+//Servo_Dire.write(105);
+
+//digitalWrite(Trig, LOW);
+//delayMicroseconds (2);
+//digitalWrite(Trig, HIGH);
+//delayMicroseconds (10);
+//digitalWrite(Trig, LOW);
+//Tempo = ((unsigned int)pulseIn(Echo, HIGH)/58);
